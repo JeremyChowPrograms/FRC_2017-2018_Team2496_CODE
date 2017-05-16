@@ -1,9 +1,9 @@
-#2496 Code Test Protocols and Procedures
+##2496 Code Test Protocols and Procedures
 
 The following is the protocol to be followed at ALL times when it comes to writing, testing,
 and running code on team 2496's robot. 
 
-** Goals: **
+**Goals:**
 
 	- Establish strict control over what code goes onto the final robot  
 	- Maintain high standard of code
@@ -13,7 +13,7 @@ and running code on team 2496's robot.
 	- Keep a safe testing enviornment
 	- Minimize failure at competition 
 
-** Git Repo: **
+**Git Repo:**
 	 
 	 
 *Writen by Ashwin Gupta on 5/15/2017* 

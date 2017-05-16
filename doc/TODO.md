@@ -1,4 +1,4 @@
-#TODO LIST
+##TODO LIST
 
 Tasks on this list need to get done. Tasks are given a priority from
 [1]high-[5]low. Please only work on tasks in your assigned sections.  
@@ -12,11 +12,11 @@ individuals.
 
 If you have any questions, contact 
 
-*email: ashwingupta2000@gmail.com *
+*email: ashwingupta2000@gmail.com*
 
-*phone: 714-234-4379 *
+*phone: 714-234-4379*
 
-**Management (Ashwin): **
+**Management (Ashwin):**
 
 	-[1] Create git repo and appropriate branch system
 	-[1] Setup repo server RPI for push/pull 
@@ -27,7 +27,7 @@ If you have any questions, contact
 	-[5] Monitor setup 
 	-[3] Educate other programmers on using system and good practice
 
-**Library (Ashwin & RJ): **
+**Library (Ashwin & RJ):**
 
 	-[1] Fix Shwin Drive encoder integration, DO NOT use static reference
 	-[1] Update Shwin Autolib with appropriate turn and move functions
@@ -37,12 +37,12 @@ If you have any questions, contact
 	-[2] Investigate network tables, process vision tracking on driver station
 
 
-**Autonomous: **
+**Autonomous:**
 
 	-[1] Write auton programs
 	-[3] SmartDashboard testing for debug and auton selection
 	
-**Primary: **
+**Primary:**
 
 	-[1] Test vision tracking 
 	-[2] Camera stream setup 
