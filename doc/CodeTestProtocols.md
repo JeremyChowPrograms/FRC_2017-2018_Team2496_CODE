@@ -5,15 +5,21 @@ and running code on team 2496's robot.
 
 **Goals:**
 
-	- Establish strict control over what code goes onto the final robot  
-	- Maintain high standard of code
-	- Ensure all code is reviewed 
-	- Allow efficient, but controlled testing 
-	- Give hands-on opportunity to programmers at all levels
-	- Keep a safe testing enviornment
-	- Minimize failure at competition 
+- Establish strict control over what code goes onto the final robot  
+- Maintain high standard of code
+- Ensure all code is reviewed 
+- Allow efficient, but controlled testing 
+- Give hands-on opportunity to programmers at all levels
+- Keep a safe testing enviornment
+- Minimize failure at competition 
 
-**Git Repo:**
+**Developing Code:** 
+- All develop
+**Testing Code:**
+
+**Debugging Code:**
+
+**Git Repo/Backing up code:**
 	 
 	 
 *Writen by Ashwin Gupta on 5/15/2017* 
