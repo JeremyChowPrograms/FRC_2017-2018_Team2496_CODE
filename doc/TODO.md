@@ -6,7 +6,7 @@ Tasks on this list need to get done. Tasks are given a priority from
 Only team leads may modify this file. Avoid tagging issues with [1]. 
 
 Management and Library tasks must only be completed by whoever coaches 
-make team leads. These members are currently up in the air due to extrememly poor policies on lead selection (in the opinion of the author of this document). 
+make team leads. These members are currently up in the air due to extremely poor policies on lead selection (in the opinion of the author of this document). 
 
 If you have any questions, contact 
 
