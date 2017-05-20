@@ -1,5 +1,9 @@
 package com.shwinlib;
 
-public abstract class PnuematicSubsystem {
+import edu.wpi.cscore.UsbCamera;
 
+
+public abstract class PnuematicSubsystem {
+	
+	
 }

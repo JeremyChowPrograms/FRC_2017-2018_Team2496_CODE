@@ -1,4 +1,4 @@
-##TODO LIST
+## TODO LIST
 
 Tasks on this list need to get done. Tasks are given a priority from
 [1]high-[5]low. Please only work on tasks in your assigned sections.  
@@ -35,6 +35,7 @@ If you have any questions, contact
 - [3] Automatic threading for Subsystem functions 
 - [4] Better sensor managment, ShwinEncoder, ShwinGyro classes? 
 - [2] Investigate network tables, process vision tracking on driver station
+- [2] Test socket communication Roborio to Driver Station
 
 
 **Autonomous:**
