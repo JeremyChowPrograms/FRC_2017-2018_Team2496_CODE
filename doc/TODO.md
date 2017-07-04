@@ -19,7 +19,7 @@ If you have any questions, contact
 - [1] Create git repo and appropriate branch system
 - [1] Setup repo server RPI for push/pull 
 - [2] Write automatic code backup scripts to Github and File server
-- [2] Draft doctrines on testing procedure, rules, and programming team roles
+- [2] Draft docs on testing procedure, rules, and programming team roles
 - [2] Fill out RESOURCES.txt
 - [1] Test board and lab setup
 - [5] Monitor setup 
@@ -49,7 +49,7 @@ If you have any questions, contact
 - [5] SmartDashboard testing
 - [5] More LED light effects
 
-**Other:**
+**Other: (Jeremy Chow)**
 
-- [5+] Make this doc HTML or rich text
+- [2+] Fill out CodeStructure.md in a similar format too this example: https://github.com/niwhsa9/VEX_2017-2018_Team2496V_CODE/blob/master/README.md. DONT do this for any code packaged under com.arj. 
 	
