@@ -1,13 +1,24 @@
-## TEAM 2496 BHS Patriots Code
+## TEAM 2496 Tru Blu Patriots Code
 **Sources (.java)**
+<br>
+<h4><i>src/org/usfirst/frc/team2496/robot/</i></h4>
+
+- *Robot.java*
+    - The starting point for executing
+    - Contains main code of the entire robot
+
+<h4><i>src/org/usfirst/frc/team2496/robot/</i></h4>
+
 - *MotorSubsystem.java*
-	- Contains subsystem that handles the wheels
+	- Self implemented subsystem
+	- Primarily concerning about the motor
 
 - *ShwinDrive.java*
-	- Contains controls that are used to handle the driving
+	- Self implemented driving system
+	- Contains arcade drive with auto adjusting for forward driving
 
 - *ShwinAutoLib.java*
-	- Unused
+	- Library for autonomous drive
 
 - *PnuematicSubsystem.java*
-	- Unused
+	- Not yet implemented
