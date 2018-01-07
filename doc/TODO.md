@@ -49,7 +49,9 @@ If you have any questions, contact
 - [5] SmartDashboard testing
 - [5] More LED light effects
 
-**Other: (Jeremy Chow)**
+**Other:**
 
-- [2+] Fill out CodeStructure.md in a similar format too this example: https://github.com/niwhsa9/VEX_2017-2018_Team2496V_CODE/blob/master/README.md. DONT do this for any code packaged under com.arj. 
+- [2+, Jeremy] Fill out CodeStructure.md in a similar format too this example: https://github.com/niwhsa9/VEX_2017-2018_Team2496V_CODE/blob/master/README.md. DONT do this for any code packaged under com.arj. 
+- [2, Rachel] Test 2018 Driver Station Software and ensure that you can drive Test Robot. Code is on Patriot 1 called 2016-2017 Code and to download right click Build.xml and hit run as -> ant build. 
+- [1, Jeremy] Complete an autonomous field map 
 	
