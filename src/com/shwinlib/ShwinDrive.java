@@ -35,6 +35,13 @@ public class ShwinDrive {
 		this.driveMotors[1] = new TalonSRX(r);
 	}
 	
+	public void tankDrive(int l, int r) {
+		this.driveMotors[0].set(l);
+		this.driveMotors[1].set(r);
+		this.driveMotors[2].set(l);
+		this.driveMotors[3].set(r);
+	}
+	
 	public void arcadeDrive(double forward, double turn, Encoder rEnc, Encoder lEnc, boolean fack) { //mother facker
 		turn = 0;//TODO remove
 		
