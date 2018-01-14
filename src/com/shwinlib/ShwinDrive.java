@@ -35,7 +35,7 @@ public class ShwinDrive {
 		this.driveMotors[1] = new TalonSRX(r);
 	}
 	
-	public void tankDrive(int l, int r) {
+	public void tankDrive(double l, double r) {
 		this.driveMotors[0].set(l);
 		this.driveMotors[1].set(r);
 		this.driveMotors[2].set(l);
