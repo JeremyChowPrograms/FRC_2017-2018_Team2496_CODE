@@ -1,8 +1,9 @@
 package com.shwinlib;
+
 import edu.wpi.first.wpilibj.RobotDrive;
 import edu.wpi.first.wpilibj.SampleRobot;
 import edu.wpi.first.wpilibj.SpeedController;
-import edu.wpi.first.wpilibj.TalonSRX;
+import edu.wpi.first.wpilibj.PWMTalonSRX;
 import edu.wpi.cscore.UsbCamera;
 import edu.wpi.first.wpilibj.CameraServer;
 import edu.wpi.first.wpilibj.Encoder;
@@ -23,16 +24,16 @@ public class ShwinDrive {
 	
 	
 	public ShwinDrive(int bl, int br, int fl, int fr) {
-		this.driveMotors[0] = new TalonSRX(bl);
-		this.driveMotors[1] = new TalonSRX(br);
-		this.driveMotors[2] = new TalonSRX(fl);
-		this.driveMotors[3] = new TalonSRX(fr);
+		this.driveMotors[0] = new PWMTalonSRX(bl);
+		this.driveMotors[1] = new PWMTalonSRX(br);
+		this.driveMotors[2] = new PWMTalonSRX(fl);
+		this.driveMotors[3] = new PWMTalonSRX(fr);
 		flag = true;
 		
 	}
 	public ShwinDrive(int l, int r) {
-		this.driveMotors[0] = new TalonSRX(l);
-		this.driveMotors[1] = new TalonSRX(r);
+		this.driveMotors[0] = new PWMTalonSRX(l);
+		this.driveMotors[1] = new PWMTalonSRX(r);
 	}
 	
 	public void tankDrive(double l, double r) {

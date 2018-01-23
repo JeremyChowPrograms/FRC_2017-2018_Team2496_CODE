@@ -2,65 +2,184 @@ package org.usfirst.frc.team2496.robot;
 
 import com.shwinlib.ShwinDrive;
 
-import edu.wpi.cscore.UsbCamera;
-import edu.wpi.first.wpilibj.CameraServer;
+import edu.wpi.first.wpilibj.ADXRS450_Gyro;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.SampleRobot;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class Robot extends SampleRobot {
-	
-	private ShwinDrive drive = new ShwinDrive(1,3,2,4);
-	private Joystick js = new Joystick(2);
-	private double maxSpeed = 1.0d;
-	private boolean left = true;
+	ADXRS450_Gyro gyro = new ADXRS450_Gyro();
+	ShwinDrive sd = new ShwinDrive(3,1,4,2);
+	Joystick stick0 = new Joystick(0);
+	Joystick stick1 = new Joystick(1);
+	Encoder en0 = new Encoder(0, 1);
+	Encoder en1 = new Encoder(3,2);
+	boolean startingOnLeft = false;
 
 	public Robot() {
-	
+		
 	}
 
 	@Override
 	public void robotInit() {
-		UsbCamera camera = CameraServer.getInstance().startAutomaticCapture();
-		camera.setResolution(640, 480);
+		
+		en0.setDistancePerPulse(12*Math.PI/800);
+		en1.setDistancePerPulse(12*Math.PI/800);
 	}
 
 	
 	@Override
 	public void autonomous() {
-		String gameData = DriverStation.getInstance().getGameSpecificMessage();
-		if(gameData.startsWith("L")==left){
-			//drive straight 11.32083 feet
-			SmartDashboard.putString("Direction", "Forward");
-		}else{
-			if(left){
-				//forward 3ft right 90 deg forward 9ft left 90 deg forward 8.32083
-				SmartDashboard.putString("Direction", "at left to right");
-			}else{
-				//forward 3ft left 90 deg forward 9ft right 90 deg forward 8.32083
-				SmartDashboard.putString("Direction", "from right to left");
+		en0.reset();
+		en1.reset();
+		gyro.reset();
+		String gameCode=DriverStation.getInstance().getGameSpecificMessage();
+		if(gameCode.startsWith("L")==startingOnLeft){
+			double kin = 0;
+			double kinscale = 0.01;
+			while(en0.getDistance()<135.85||en1.getDistance()<135.85){
+				sd.tankDrive(0.4+kin*kinscale, -0.4+kin*kinscale);
+				kin=(en1.getDistance()-en0.getDistance());
 			}
+			sd.tankDrive(-1, 1);
+			Timer.delay(0.1);
+			sd.tankDrive(0, 0);
+		}else if(!startingOnLeft){
+			double kin = 0;
+			double kinscale = 0.01;
+			//forward 3ft
+			while(en0.getDistance()<36||en1.getDistance()<36){
+				sd.tankDrive(0.4+kin*kinscale, -0.4+kin*kinscale);
+				kin=(en1.getDistance()-en0.getDistance());
+			}
+			sd.tankDrive(-1, 1);
+			Timer.delay(0.1);
+			sd.tankDrive(0, 0);
+			en0.reset();
+			en1.reset();
+			
+			//turn
+			gyro.reset();
+			while(gyro.getAngle()>-90){
+				sd.tankDrive(-0.15, -0.09);
+			}
+			sd.tankDrive(.5, .5);
+
+			Timer.delay(0.05);
+			sd.tankDrive(0, 0);
+			
+			en0.reset();
+			en1.reset();
+			
+			//forward 9ft
+			while(en0.getDistance()<9*12||en1.getDistance()<9*12){
+				sd.tankDrive(0.4+kin*kinscale, -0.4+kin*kinscale);
+				kin=(en1.getDistance()-en0.getDistance());
+			}
+			sd.tankDrive(-1, 1);
+			Timer.delay(0.1);
+			sd.tankDrive(0, 0);
+			en0.reset();
+			en1.reset();
+			
+			//turn
+			//turn
+			gyro.reset();
+			while(gyro.getAngle()<90){
+				sd.tankDrive(0.3, 0.17);
+			}
+			sd.tankDrive(-.5, -.5);
+
+			Timer.delay(0.05);
+			sd.tankDrive(0, 0);
+			en0.reset();
+			en1.reset();
+
+			//forward
+			while(en0.getDistance()<99.85||en1.getDistance()<99.85){
+				sd.tankDrive(0.4+kin*kinscale, -0.4+kin*kinscale);
+				kin=(en1.getDistance()-en0.getDistance());
+			}
+			sd.tankDrive(-1, 1);
+			Timer.delay(0.1);
+			sd.tankDrive(0, 0);
+			
+		}else{
+
+			double kin = 0;
+			double kinscale = 0.01;
+			//forward 3ft
+			while(en0.getDistance()<36||en1.getDistance()<36){
+				sd.tankDrive(0.4+kin*kinscale, -0.4+kin*kinscale);
+				kin=(en1.getDistance()-en0.getDistance());
+			}
+			sd.tankDrive(-1, 1);
+			Timer.delay(0.1);
+			sd.tankDrive(0, 0);
+			en0.reset();
+			en1.reset();
+
+			//turn
+			gyro.reset();
+			while(gyro.getAngle()<90){
+				sd.tankDrive(0.3, 0.17);
+			}
+			sd.tankDrive(-.5, -.5);
+
+			Timer.delay(0.05);
+			sd.tankDrive(0, 0);
+			en0.reset();
+			en1.reset();
+
+			
+			//forward 9ft
+			while(en0.getDistance()<9*12||en1.getDistance()<9*12){
+				sd.tankDrive(0.4+kin*kinscale, -0.4+kin*kinscale);
+				kin=(en1.getDistance()-en0.getDistance());
+			}
+			sd.tankDrive(-1, 1);
+			Timer.delay(0.1);
+			sd.tankDrive(0, 0);
+			en0.reset();
+			en1.reset();
+			
+			
+			//turn
+			gyro.reset();
+			while(gyro.getAngle()>-90){
+				sd.tankDrive(-0.15, -0.09);
+			}
+			sd.tankDrive(.5, .5);
+
+			Timer.delay(0.05);
+			sd.tankDrive(0, 0);
+			
+			en0.reset();
+			en1.reset();
+			//forward
+			while(en0.getDistance()<99.85||en1.getDistance()<99.85){
+				sd.tankDrive(0.4+kin*kinscale, -0.4+kin*kinscale);
+				kin=(en1.getDistance()-en0.getDistance());
+			}
+			sd.tankDrive(-1, 1);
+			Timer.delay(0.1);
+			sd.tankDrive(0, 0);
 		}
 	}
 	
 	@Override
 	public void operatorControl() { //Main thread
+		en0.reset();
+		en1.reset();
+		gyro.reset();
 		while (isOperatorControl() && isEnabled()) {
-			drive.tankDrive(-js.getRawAxis(1)*maxSpeed, js.getRawAxis(5)*maxSpeed);
-			if(js.getPOV()==0){
-				maxSpeed+=0.01;
-				if(maxSpeed>1.0d){
-					maxSpeed=1.0d;
-				}
-			}else if(js.getPOV()==180){
-				maxSpeed-=0.01;
-				if(maxSpeed<0.0d){
-					maxSpeed=0.0d;
-				}
-			}
-			SmartDashboard.putNumber("Max Speed: ", maxSpeed);
+			sd.tankDrive(-stick0.getY(), stick1.getY());
+			SmartDashboard.putNumber("gyro: ", gyro.getAngle());
+			SmartDashboard.putNumber("L Enc", en0.getDistance());
+			SmartDashboard.putNumber("R Enc", en1.getDistance());
 			Timer.delay(0.005); 
 		}
 	}
@@ -70,10 +189,5 @@ public class Robot extends SampleRobot {
 	 */
 	@Override
 	public void test() {
-		HRVL_MaxSonar_EZ_MB1013 sonar = new HRVL_MaxSonar_EZ_MB1013(0, 0);
-		sonar.set(true);
-		while(isTest()&&isEnabled()){
-			System.out.println(sonar.readMM());
-		}
 	}
 }
