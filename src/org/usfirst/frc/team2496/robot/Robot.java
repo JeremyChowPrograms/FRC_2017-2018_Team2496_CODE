@@ -189,6 +189,7 @@ public class Robot extends SampleRobot {
 			} else if (stick0.getRawButton(3)) {
 				claw.set(-0.1);
 			}
+			
 			if (stick1.getRawButton(1)) {
 				lift.set(0.1);
 			} else if (stick1.getRawButton(3)) {
