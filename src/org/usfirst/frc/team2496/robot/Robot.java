@@ -186,17 +186,23 @@ public class Robot extends SampleRobot {
 				claw.set(1);
 			} else if (stick0.getRawButton(3)) {
 				claw.set(-1);
+			}else {
+				claw.set(0);
 			}
 			
 			if (stick1.getRawButton(1)) {
 				lift.set(1);
 			} else if (stick1.getRawButton(3)) {
 				lift.set(-1);
+			}else {
+				lift.set(0);
 			}
 			if (stick0.getRawButton(8)) {
 				climb.set(1);
 			} else if (stick0.getRawButton(9)) {
 				climb.set(-1);
+			}else {
+				climb.set(0);
 			}
 			Timer.delay(0.005);
 		}
