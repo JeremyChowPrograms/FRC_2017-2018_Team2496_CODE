@@ -2,8 +2,6 @@ package org.usfirst.frc.team2496.robot;
 
 import com.shwinlib.ShwinDrive;
 
-import edu.wpi.first.wpilibj.ADXRS450_Gyro;
-import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.SampleRobot;
@@ -14,17 +12,17 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 @SuppressWarnings("deprecation")
 public class Robot extends SampleRobot {
-	ADXRS450_Gyro gyro = new ADXRS450_Gyro();
+	//ADXRS450_Gyro gyro = new ADXRS450_Gyro();
 	ShwinDrive sd = new ShwinDrive(3, 1, 4, 2);
 	Joystick stick0 = new Joystick(0);
 	Joystick stick1 = new Joystick(1);
-	Encoder en0 = new Encoder(0, 1);
+	Encoder en0 = new Encoder(0, 1); 
 	Encoder en1 = new Encoder(3, 2);
 	SpeedController claw = new Talon(5);
 	SpeedController claw2 = new Talon(6);
 	SpeedController lift = new Talon(7);
 	SpeedController climb = new Talon(8);
-	boolean startingOnLeft = true;
+	boolean startingOnLeft = false;
 
 	public Robot() {
 
@@ -36,7 +34,7 @@ public class Robot extends SampleRobot {
 		en0.setDistancePerPulse(12 * Math.PI / 800);
 		en1.setDistancePerPulse(12 * Math.PI / 800);
 	}
-
+/*
 	@Override
 	public void autonomous() {
 		en0.reset();
@@ -172,33 +170,33 @@ public class Robot extends SampleRobot {
 			Timer.delay(0.1);
 			sd.tankDrive(0, 0);
 		}
-	}
+	}/**/
 
 	@Override
 	public void operatorControl() { // Main thread
 		en0.reset();
 		en1.reset();
-		gyro.reset();
+	//	gyro.reset();
 		while (isOperatorControl() && isEnabled()) {
 			sd.tankDrive(-stick0.getY(), stick1.getY());
-			SmartDashboard.putNumber("gyro: ", gyro.getAngle());
+		//	SmartDashboard.putNumber("gyro: ", gyro.getAngle());
 			SmartDashboard.putNumber("L Enc", en0.getDistance());
 			SmartDashboard.putNumber("R Enc", en1.getDistance());
 			if (stick0.getRawButton(1)) {
-				claw.set(0.1);
+				claw.set(1);
 			} else if (stick0.getRawButton(3)) {
-				claw.set(-0.1);
+				claw.set(-1);
 			}
 			
 			if (stick1.getRawButton(1)) {
-				lift.set(0.1);
+				lift.set(1);
 			} else if (stick1.getRawButton(3)) {
-				lift.set(-0.1);
+				lift.set(-1);
 			}
 			if (stick0.getRawButton(8)) {
-				climb.set(0.1);
+				climb.set(1);
 			} else if (stick0.getRawButton(9)) {
-				climb.set(-0.1);
+				climb.set(-1);
 			}
 			Timer.delay(0.005);
 		}
@@ -209,5 +207,8 @@ public class Robot extends SampleRobot {
 	 */
 	@Override
 	public void test() {
+		sd.tankDrive(0.5, -0.5);
+		Timer.delay(2);
+		sd.tankDrive(0, 0);
 	}
 }
