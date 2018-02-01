@@ -184,10 +184,13 @@ public class Robot extends SampleRobot {
 			SmartDashboard.putNumber("R Enc", en1.getDistance());
 			if (stick0.getRawButton(1)) {
 				claw.set(1);
+				claw2.set(1);
 			} else if (stick0.getRawButton(3)) {
 				claw.set(-1);
+				claw2.set(-1);
 			}else {
 				claw.set(0);
+				claw2.set(0);
 			}
 			
 			if (stick1.getRawButton(1)) {
