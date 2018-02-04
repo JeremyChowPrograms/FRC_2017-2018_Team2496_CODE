@@ -162,7 +162,7 @@ public class Robot extends SampleRobot {
 						} catch (Exception e) {
 							e.printStackTrace();
 						}
-						cupControl= false;
+						cupControl = false;
 					}
 				}.start();
 			}
