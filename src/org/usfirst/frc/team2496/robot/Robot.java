@@ -2,6 +2,8 @@ package org.usfirst.frc.team2496.robot;
 
 import com.shwinlib.ShwinDrive;
 
+import edu.wpi.cscore.UsbCamera;
+import edu.wpi.first.wpilibj.CameraServer;
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.SampleRobot;
@@ -16,8 +18,9 @@ public class Robot extends SampleRobot {
 	ShwinDrive sd = new ShwinDrive(3, 1, 4, 2);
 	Joystick stick0 = new Joystick(0);
 	Joystick stick1 = new Joystick(1);
-	Encoder en0 = new Encoder(0, 1);
-	Encoder en1 = new Encoder(3, 2);
+	Encoder en0 = new Encoder(2, 3);
+	Encoder en1 = new Encoder(1, 0);
+	Encoder en2 = new Encoder(5,4);
 	SpeedController claw = new Talon(5);
 	SpeedController claw2 = new Talon(6);
 	SpeedController lift = new Talon(7);
@@ -31,8 +34,11 @@ public class Robot extends SampleRobot {
 	@Override
 	public void robotInit() {
 
-		en0.setDistancePerPulse(12 * Math.PI / 800);
-		en1.setDistancePerPulse(12 * Math.PI / 800);
+		UsbCamera camera = CameraServer.getInstance().startAutomaticCapture();
+		camera.setResolution(640, 480);
+		en0.setDistancePerPulse(8 * Math.PI / 200);
+		en1.setDistancePerPulse(8 * Math.PI /200);
+		en2.setDistancePerPulse(Math.PI/200);
 	}
 	/*
 	 * @Override public void autonomous() { en0.reset(); en1.reset();
@@ -105,6 +111,7 @@ public class Robot extends SampleRobot {
 	public void operatorControl() { // Main thread
 		en0.reset();
 		en1.reset();
+		en2.reset();
 		double ts1, ts2;
 		// gyro.reset();
 		while (isOperatorControl() && isEnabled()) {
@@ -114,6 +121,7 @@ public class Robot extends SampleRobot {
 			// SmartDashboard.putNumber("gyro: ", gyro.getAngle());
 			SmartDashboard.putNumber("L Enc", en0.getDistance());
 			SmartDashboard.putNumber("R Enc", en1.getDistance());
+			SmartDashboard.putNumber("Lift", en2.getDistance());
 			if (!cupControl) {
 				if (stick0.getRawButton(1)) {
 					claw.set(1);
