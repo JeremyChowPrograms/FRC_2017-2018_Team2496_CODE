@@ -40,7 +40,7 @@ public class Robot extends SampleRobot {
 		camera.setResolution(640, 480);
 		en0.setDistancePerPulse(8 * Math.PI / 200);
 		en1.setDistancePerPulse(8 * Math.PI / 200);
-		en2.setDistancePerPulse(Math.PI / 200);
+		en2.setDistancePerPulse(0.5 * Math.PI / 200);
 	}
 
 	@Override
@@ -190,7 +190,7 @@ public class Robot extends SampleRobot {
 			ts1 = (-stick0.getZ() / 2) + 0.5d;
 			ts2 = (-stick1.getZ() / 2) + 0.5d;
 			sd.tankDrive(-stick0.getY() * ts1, stick1.getY() * ts2);
-			 SmartDashboard.putNumber("gyro: ", gyro.getAngle());
+			SmartDashboard.putNumber("gyro: ", gyro.getAngle());
 			SmartDashboard.putNumber("L Enc", en0.getDistance());
 			SmartDashboard.putNumber("R Enc", en1.getDistance());
 			SmartDashboard.putNumber("Lift", en2.getDistance());
@@ -233,7 +233,7 @@ public class Robot extends SampleRobot {
 							lift.set(0);
 							claw.set(-1);
 							claw2.set(-1);
-							Timer.delay(4);
+							Timer.delay(2);
 							claw.set(0);
 							claw2.set(0);
 							lift.set(-0.3);
