@@ -27,7 +27,7 @@ public class Robot extends SampleRobot {
 	SpeedController claw2 = new Talon(6);
 	SpeedController lift = new Talon(7);
 	SpeedController climb = new Talon(8);
-	boolean startingOnLeft = false;
+	boolean startingOnLeft = false; //true or false
 
 	public Robot() {
 
@@ -53,7 +53,7 @@ public class Robot extends SampleRobot {
 		if (gameCode.startsWith("L") == startingOnLeft) {
 			double kin = 0;
 			double kinscale = 0.01;
-			while (en0.getDistance() < 135.85 || en1.getDistance() < 135.85) {
+			while (en0.getDistance() < 90.85 || en1.getDistance() < 90.85) {
 				sd.tankDrive(0.4 + kin * kinscale, -0.4 + kin * kinscale);
 				kin = (en1.getDistance() - en0.getDistance());
 			}
@@ -75,7 +75,10 @@ public class Robot extends SampleRobot {
 
 			// turn
 			gyro.reset();
+
+			double diff = 1;
 			while (gyro.getAngle() > -90) {
+				
 				sd.tankDrive(-0.15, -0.09);
 			}
 			sd.tankDrive(1, 1);
@@ -100,17 +103,15 @@ public class Robot extends SampleRobot {
 			// turn
 			gyro.reset();
 			while (gyro.getAngle() < 90) {
-				sd.tankDrive(0.3, 0.17);
+				diff = (90.0-gyro.getAngle())/90.0;
+				sd.tankDrive(0.05+0.5*diff,0.05+ 0.5*diff);
 			}
-			sd.tankDrive(-.5, -.5);
-
-			Timer.delay(0.025);
 			sd.tankDrive(0, 0);
 			en0.reset();
 			en1.reset();
 
 			// forward
-			while (en0.getDistance() < 99.85 || en1.getDistance() < 99.85) {
+			while (en0.getDistance() < 51.85 || en1.getDistance() < 51.85) {
 				sd.tankDrive(0.4 + kin * kinscale, -0.4 + kin * kinscale);
 				kin = (en1.getDistance() - en0.getDistance());
 			}
@@ -167,7 +168,7 @@ public class Robot extends SampleRobot {
 
 			en0.reset();
 			en1.reset(); // forward
-			while (en0.getDistance() < 99.85 || en1.getDistance() < 99.85) {
+			while (en0.getDistance() < 51.85 || en1.getDistance() < 51.85) {
 				sd.tankDrive(0.4 + kin * kinscale, -0.4 + kin * kinscale);
 				kin = (en1.getDistance() - en0.getDistance());
 			}
@@ -257,8 +258,12 @@ public class Robot extends SampleRobot {
 	 */
 	@Override
 	public void test() {
-		sd.tankDrive(0.5, -0.5);
-		Timer.delay(2);
+		gyro.reset();
+		double diff = 1;
+		while (gyro.getAngle() < 90) {
+			diff = (90.0-gyro.getAngle())/90.0;
+			sd.tankDrive(0.5*diff, 0.5*diff);
+		}
 		sd.tankDrive(0, 0);
 
 	}
