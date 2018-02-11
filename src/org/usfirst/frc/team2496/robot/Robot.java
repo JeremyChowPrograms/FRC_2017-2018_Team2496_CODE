@@ -22,12 +22,12 @@ public class Robot extends SampleRobot {
 	Joystick stick1 = new Joystick(1);
 	Encoder en0 = new Encoder(2, 3);
 	Encoder en1 = new Encoder(1, 0);
-	Encoder en2 = new Encoder(4, 5);
+	Encoder en2 = new Encoder(5, 4);
 	SpeedController claw = new Talon(5);
 	SpeedController claw2 = new Talon(6);
 	SpeedController lift = new Talon(7);
 	SpeedController climb = new Talon(8);
-	boolean startingOnLeft = false; //true or false
+	boolean startingOnLeft = false; // true or false
 
 	public Robot() {
 
@@ -41,7 +41,6 @@ public class Robot extends SampleRobot {
 		en0.setDistancePerPulse(8 * Math.PI / 200);
 		en1.setDistancePerPulse(8 * Math.PI / 200);
 		en2.setDistancePerPulse(Math.PI / 200);
-		gyro.calibrate();
 	}
 
 	@Override
@@ -78,8 +77,8 @@ public class Robot extends SampleRobot {
 
 			double diff = 1;
 			while (gyro.getAngle() > -90) {
-				diff = (-90.0-gyro.getAngle())/90.0;
-				sd.tankDrive(-0.05+ 0.5*diff, -0.05 + 0.5*diff);
+				diff = (-90.0 - gyro.getAngle()) / 90.0;
+				sd.tankDrive(-0.1 + 0.4 * diff, -0.1 + 0.4 * diff);
 			}
 			sd.tankDrive(0, 0);
 
@@ -87,7 +86,7 @@ public class Robot extends SampleRobot {
 			en1.reset();
 
 			// forward 9ft
-			while (en0.getDistance() < 9 * 12 || en1.getDistance() < 9 * 12) {
+			while (en0.getDistance() < 6 * 12 || en1.getDistance() < 6 * 12) {
 				sd.tankDrive(0.4 + kin * kinscale, -0.4 + kin * kinscale);
 				kin = (en1.getDistance() - en0.getDistance());
 			}
@@ -100,8 +99,8 @@ public class Robot extends SampleRobot {
 			// turn
 			gyro.reset();
 			while (gyro.getAngle() < 90) {
-				diff = (90.0-gyro.getAngle())/90.0;
-				sd.tankDrive(0.05+0.5*diff,0.05+ 0.5*diff);
+				diff = (90.0 - gyro.getAngle()) / 90.0;
+				sd.tankDrive(0.1 + 0.4 * diff, 0.1 + 0.4 * diff);
 			}
 			sd.tankDrive(0, 0);
 			en0.reset();
@@ -134,17 +133,17 @@ public class Robot extends SampleRobot {
 			double diff = 1;
 			gyro.reset();
 			while (gyro.getAngle() < 90) {
-				diff = (90.0-gyro.getAngle())/90.0;
-				sd.tankDrive(0.05+0.5*diff,0.05+ 0.5*diff);
+				diff = (90.0 - gyro.getAngle()) / 90.0;
+				sd.tankDrive(0.05 + 0.5 * diff, 0.05 + 0.5 * diff);
 			}
 			sd.tankDrive(0, 0);
 			en0.reset();
 			en1.reset();
 
 			// forward 9ft
-			while (en0.getDistance() < 12 * 12 || en1.getDistance() < 12 * 12) {
+			while (en0.getDistance() < 9 * 12 || en1.getDistance() < 9 * 12) {
 				sd.tankDrive(0.4 + kin * kinscale, -0.4 + kin * kinscale);
-				kin = (en1.getDistance() -  en0.getDistance());
+				kin = (en1.getDistance() - en0.getDistance());
 			}
 			sd.tankDrive(-1, 1);
 			Timer.delay(0.1);
@@ -155,8 +154,8 @@ public class Robot extends SampleRobot {
 			// turn
 			gyro.reset();
 			while (gyro.getAngle() > -90) {
-				diff = (-90.0-gyro.getAngle())/90.0;
-				sd.tankDrive(-0.05+ 0.5*diff, -0.05 + 0.5*diff);
+				diff = (-90.0 - gyro.getAngle()) / 90.0;
+				sd.tankDrive(-0.05 + 0.5 * diff, -0.05 + 0.5 * diff);
 			}
 			sd.tankDrive(0, 0);
 
@@ -174,6 +173,7 @@ public class Robot extends SampleRobot {
 	/**/
 
 	boolean cupControl = false;
+	double fixedHeight = 0.0d;
 
 	@Override
 	public void operatorControl() { // Main thread
@@ -182,6 +182,21 @@ public class Robot extends SampleRobot {
 		en2.reset();
 		double ts1, ts2;
 		gyro.reset();
+		Thread liftControl = new Thread() {
+			@Override
+			public void run() {
+				while (isOperatorControl() && isEnabled()) {
+					if (!cupControl) {
+						if (en2.getDistance() < fixedHeight) {
+							lift.set(-(0.5 + 0.1 * (fixedHeight - en2.getDistance())));
+						}else{
+							lift.set(0.0);
+						}
+					}
+				}
+			}
+		};
+		liftControl.start();
 		while (isOperatorControl() && isEnabled()) {
 			ts1 = (-stick0.getZ() / 2) + 0.5d;
 			ts2 = (-stick1.getZ() / 2) + 0.5d;
@@ -192,6 +207,7 @@ public class Robot extends SampleRobot {
 			SmartDashboard.putNumber("Lift", en2.getDistance());
 			SmartDashboard.putNumber("ts1", ts1);
 			SmartDashboard.putNumber("ts2", ts2);
+			SmartDashboard.putNumber("DH", fixedHeight);
 			if (!cupControl) {
 				if (stick0.getRawButton(1)) {
 					claw.set(1);
@@ -204,11 +220,15 @@ public class Robot extends SampleRobot {
 					claw2.set(0);
 				}
 				if (stick1.getRawButton(1)) {
-					lift.set(ts1);
+					fixedHeight +=0.1;
+					if(fixedHeight>40){
+						fixedHeight = 40;
+					}
 				} else if (stick1.getRawButton(3)) {
-					lift.set(-ts2);
-				} else {
-					lift.set(0);
+					fixedHeight -=0.1;
+					if(fixedHeight<0){
+						fixedHeight = 0;
+					}
 				}
 			}
 			if (stick0.getRawButton(8)) {
@@ -254,8 +274,8 @@ public class Robot extends SampleRobot {
 		gyro.reset();
 		double diff = 1;
 		while (gyro.getAngle() < 90) {
-			diff = (90.0-gyro.getAngle())/90.0;
-			sd.tankDrive(0.5*diff, 0.5*diff);
+			diff = (90.0 - gyro.getAngle()) / 90.0;
+			sd.tankDrive(0.5 * diff, 0.5 * diff);
 		}
 		sd.tankDrive(0, 0);
 
