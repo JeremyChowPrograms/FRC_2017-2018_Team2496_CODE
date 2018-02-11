@@ -40,7 +40,8 @@ public class Robot extends SampleRobot {
 		camera.setResolution(640, 480);
 		en0.setDistancePerPulse(8 * Math.PI / 200);
 		en1.setDistancePerPulse(8 * Math.PI / 200);
-		en2.setDistancePerPulse(0.5 * Math.PI / 200);
+		en2.setDistancePerPulse(Math.PI / 200);
+		gyro.calibrate();
 	}
 
 	@Override
@@ -185,7 +186,7 @@ public class Robot extends SampleRobot {
 		en1.reset();
 		en2.reset();
 		double ts1, ts2;
-		// gyro.reset();
+		gyro.reset();
 		while (isOperatorControl() && isEnabled()) {
 			ts1 = (-stick0.getZ() / 2) + 0.5d;
 			ts2 = (-stick1.getZ() / 2) + 0.5d;
@@ -194,6 +195,8 @@ public class Robot extends SampleRobot {
 			SmartDashboard.putNumber("L Enc", en0.getDistance());
 			SmartDashboard.putNumber("R Enc", en1.getDistance());
 			SmartDashboard.putNumber("Lift", en2.getDistance());
+			SmartDashboard.putNumber("ts1", ts1);
+			SmartDashboard.putNumber("ts2", ts2);
 			if (!cupControl) {
 				if (stick0.getRawButton(1)) {
 					claw.set(1);
@@ -207,9 +210,9 @@ public class Robot extends SampleRobot {
 				}
 
 				if (stick1.getRawButton(1)) {
-					lift.set(0.75);
+					lift.set(ts1);
 				} else if (stick1.getRawButton(3)) {
-					lift.set(-0.3);
+					lift.set(-ts2);
 				} else {
 					lift.set(0);
 				}
@@ -222,7 +225,6 @@ public class Robot extends SampleRobot {
 				climb.set(0);
 			}
 			if (stick1.getRawButton(2)) {
-
 				new Thread() {
 					@Override
 					public void run() {
