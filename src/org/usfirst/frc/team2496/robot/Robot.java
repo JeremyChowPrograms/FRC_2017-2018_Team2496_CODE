@@ -147,7 +147,7 @@ public class Robot extends SampleRobot {
 			// forward 9ft
 			while (en0.getDistance() < 9 * 12 || en1.getDistance() < 9 * 12) {
 				sd.tankDrive(0.4 + kin * kinscale, -0.4 + kin * kinscale);
-				kin = (en1.getDistance() - en0.getDistance());
+				kin = (en1.getDistance() -  en0.getDistance());
 			}
 			sd.tankDrive(-1, 1);
 			Timer.delay(0.1);
