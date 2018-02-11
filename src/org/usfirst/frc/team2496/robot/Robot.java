@@ -2,21 +2,29 @@ package org.usfirst.frc.team2496.robot;
 
 import com.shwinlib.ShwinDrive;
 
+<<<<<<< HEAD
 import edu.wpi.cscore.UsbCamera;
 import edu.wpi.first.wpilibj.ADXRS450_Gyro;
 import edu.wpi.first.wpilibj.CameraServer;
+=======
+import edu.wpi.first.wpilibj.ADXRS450_Gyro;
+>>>>>>> master
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.SampleRobot;
+<<<<<<< HEAD
 import edu.wpi.first.wpilibj.SpeedController;
 import edu.wpi.first.wpilibj.Talon;
+=======
+>>>>>>> master
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 @SuppressWarnings("deprecation")
 public class Robot extends SampleRobot {
 	ADXRS450_Gyro gyro = new ADXRS450_Gyro();
+<<<<<<< HEAD
 	ShwinDrive sd = new ShwinDrive(3, 1, 4, 2);
 	Joystick stick0 = new Joystick(0);
 	Joystick stick1 = new Joystick(1);
@@ -31,10 +39,22 @@ public class Robot extends SampleRobot {
 
 	public Robot() {
 
+=======
+	ShwinDrive sd = new ShwinDrive(3,1,4,2);
+	Joystick stick0 = new Joystick(0);
+	Joystick stick1 = new Joystick(1);
+	Encoder en0 = new Encoder(0, 1);
+	Encoder en1 = new Encoder(3,2);
+	boolean startingOnLeft = false;
+
+	public Robot() {
+		
+>>>>>>> master
 	}
 
 	@Override
 	public void robotInit() {
+<<<<<<< HEAD
 
 		UsbCamera camera = CameraServer.getInstance().startAutomaticCapture();
 		camera.setResolution(640, 480);
@@ -42,6 +62,11 @@ public class Robot extends SampleRobot {
 		en1.setDistancePerPulse(8 * Math.PI / 200);
 		en2.setDistancePerPulse(Math.PI / 200);
 		gyro.calibrate();
+=======
+		
+		en0.setDistancePerPulse(12*Math.PI/800);
+		en1.setDistancePerPulse(12*Math.PI/800);
+>>>>>>> master
 	}
 
 	@Override
@@ -49,6 +74,7 @@ public class Robot extends SampleRobot {
 		en0.reset();
 		en1.reset();
 		gyro.reset();
+<<<<<<< HEAD
 		String gameCode = DriverStation.getInstance().getGameSpecificMessage();
 		if (gameCode.startsWith("L") == startingOnLeft) {
 			double kin = 0;
@@ -56,22 +82,42 @@ public class Robot extends SampleRobot {
 			while (en0.getDistance() < 90.85 || en1.getDistance() < 90.85) {
 				sd.tankDrive(0.4 + kin * kinscale, -0.4 + kin * kinscale);
 				kin = (en1.getDistance() - en0.getDistance());
+=======
+		String gameCode=DriverStation.getInstance().getGameSpecificMessage();
+		if(gameCode.startsWith("L")==startingOnLeft){
+			double kin = 0;
+			double kinscale = 0.01;
+			while(en0.getDistance()<135.85||en1.getDistance()<135.85){
+				sd.tankDrive(0.4+kin*kinscale, -0.4+kin*kinscale);
+				kin=(en1.getDistance()-en0.getDistance());
+>>>>>>> master
 			}
 			sd.tankDrive(-1, 1);
 			Timer.delay(0.1);
 			sd.tankDrive(0, 0);
+<<<<<<< HEAD
 		} else if (!startingOnLeft) {
 			double kin = 0;
 			double kinscale = 0.01; // forward 3ft
 			while (en0.getDistance() < 36 || en1.getDistance() < 36) {
 				sd.tankDrive(0.4 + kin * kinscale, -0.4 + kin * kinscale);
 				kin = (en1.getDistance() - en0.getDistance());
+=======
+		}else if(!startingOnLeft){
+			double kin = 0;
+			double kinscale = 0.01;
+			//forward 3ft
+			while(en0.getDistance()<36||en1.getDistance()<36){
+				sd.tankDrive(0.4+kin*kinscale, -0.4+kin*kinscale);
+				kin=(en1.getDistance()-en0.getDistance());
+>>>>>>> master
 			}
 			sd.tankDrive(-1, 1);
 			Timer.delay(0.1);
 			sd.tankDrive(0, 0);
 			en0.reset();
 			en1.reset();
+<<<<<<< HEAD
 
 			// turn
 			gyro.reset();
@@ -93,12 +139,33 @@ public class Robot extends SampleRobot {
 			while (en0.getDistance() < 9 * 12 || en1.getDistance() < 9 * 12) {
 				sd.tankDrive(0.4 + kin * kinscale, -0.4 + kin * kinscale);
 				kin = (en1.getDistance() - en0.getDistance());
+=======
+			
+			//turn
+			gyro.reset();
+			while(gyro.getAngle()>-90){
+				sd.tankDrive(-0.15, -0.09);
+			}
+			sd.tankDrive(.5, .5);
+
+			Timer.delay(0.05);
+			sd.tankDrive(0, 0);
+			
+			en0.reset();
+			en1.reset();
+			
+			//forward 9ft
+			while(en0.getDistance()<9*12||en1.getDistance()<9*12){
+				sd.tankDrive(0.4+kin*kinscale, -0.4+kin*kinscale);
+				kin=(en1.getDistance()-en0.getDistance());
+>>>>>>> master
 			}
 			sd.tankDrive(-1, 1);
 			Timer.delay(0.1);
 			sd.tankDrive(0, 0);
 			en0.reset();
 			en1.reset();
+<<<<<<< HEAD
 
 			// turn
 			gyro.reset();
@@ -106,18 +173,38 @@ public class Robot extends SampleRobot {
 				diff = (90.0-gyro.getAngle())/90.0;
 				sd.tankDrive(0.05+0.5*diff,0.05+ 0.5*diff);
 			}
+=======
+			
+			//turn
+			//turn
+			gyro.reset();
+			while(gyro.getAngle()<90){
+				sd.tankDrive(0.3, 0.17);
+			}
+			sd.tankDrive(-.5, -.5);
+
+			Timer.delay(0.05);
+>>>>>>> master
 			sd.tankDrive(0, 0);
 			en0.reset();
 			en1.reset();
 
+<<<<<<< HEAD
 			// forward
 			while (en0.getDistance() < 51.85 || en1.getDistance() < 51.85) {
 				sd.tankDrive(0.4 + kin * kinscale, -0.4 + kin * kinscale);
 				kin = (en1.getDistance() - en0.getDistance());
+=======
+			//forward
+			while(en0.getDistance()<99.85||en1.getDistance()<99.85){
+				sd.tankDrive(0.4+kin*kinscale, -0.4+kin*kinscale);
+				kin=(en1.getDistance()-en0.getDistance());
+>>>>>>> master
 			}
 			sd.tankDrive(-1, 1);
 			Timer.delay(0.1);
 			sd.tankDrive(0, 0);
+<<<<<<< HEAD
 
 		} else {
 
@@ -126,6 +213,17 @@ public class Robot extends SampleRobot {
 			while (en0.getDistance() < 36 || en1.getDistance() < 36) {
 				sd.tankDrive(0.4 + kin * kinscale, -0.4 + kin * kinscale);
 				kin = (en1.getDistance() - en0.getDistance());
+=======
+			
+		}else{
+
+			double kin = 0;
+			double kinscale = 0.01;
+			//forward 3ft
+			while(en0.getDistance()<36||en1.getDistance()<36){
+				sd.tankDrive(0.4+kin*kinscale, -0.4+kin*kinscale);
+				kin=(en1.getDistance()-en0.getDistance());
+>>>>>>> master
 			}
 			sd.tankDrive(-1, 1);
 			Timer.delay(0.1);
@@ -133,28 +231,47 @@ public class Robot extends SampleRobot {
 			en0.reset();
 			en1.reset();
 
+<<<<<<< HEAD
 			// turn
 			gyro.reset();
 			while (gyro.getAngle() < 90) {
+=======
+			//turn
+			gyro.reset();
+			while(gyro.getAngle()<90){
+>>>>>>> master
 				sd.tankDrive(0.3, 0.17);
 			}
 			sd.tankDrive(-.5, -.5);
 
+<<<<<<< HEAD
 			Timer.delay(0.04);
+=======
+			Timer.delay(0.05);
+>>>>>>> master
 			sd.tankDrive(0, 0);
 			en0.reset();
 			en1.reset();
 
+<<<<<<< HEAD
 			// forward 9ft
 			while (en0.getDistance() < 9 * 12 || en1.getDistance() < 9 * 12) {
 				sd.tankDrive(0.4 + kin * kinscale, -0.4 + kin * kinscale);
 				kin = (en1.getDistance() -  en0.getDistance());
+=======
+			
+			//forward 9ft
+			while(en0.getDistance()<9*12||en1.getDistance()<9*12){
+				sd.tankDrive(0.4+kin*kinscale, -0.4+kin*kinscale);
+				kin=(en1.getDistance()-en0.getDistance());
+>>>>>>> master
 			}
 			sd.tankDrive(-1, 1);
 			Timer.delay(0.1);
 			sd.tankDrive(0, 0);
 			en0.reset();
 			en1.reset();
+<<<<<<< HEAD
 
 			// turn
 			gyro.reset();
@@ -171,6 +288,26 @@ public class Robot extends SampleRobot {
 			while (en0.getDistance() < 51.85 || en1.getDistance() < 51.85) {
 				sd.tankDrive(0.4 + kin * kinscale, -0.4 + kin * kinscale);
 				kin = (en1.getDistance() - en0.getDistance());
+=======
+			
+			
+			//turn
+			gyro.reset();
+			while(gyro.getAngle()>-90){
+				sd.tankDrive(-0.15, -0.09);
+			}
+			sd.tankDrive(.5, .5);
+
+			Timer.delay(0.05);
+			sd.tankDrive(0, 0);
+			
+			en0.reset();
+			en1.reset();
+			//forward
+			while(en0.getDistance()<99.85||en1.getDistance()<99.85){
+				sd.tankDrive(0.4+kin*kinscale, -0.4+kin*kinscale);
+				kin=(en1.getDistance()-en0.getDistance());
+>>>>>>> master
 			}
 			sd.tankDrive(-1, 1);
 			Timer.delay(0.1);
@@ -182,6 +319,7 @@ public class Robot extends SampleRobot {
 	boolean cupControl = false;
 
 	@Override
+<<<<<<< HEAD
 	public void operatorControl() { // Main thread
 		en0.reset();
 		en1.reset();
@@ -250,6 +388,18 @@ public class Robot extends SampleRobot {
 				}.start();
 			}
 			Timer.delay(0.005);
+=======
+	public void operatorControl() { //Main thread
+		en0.reset();
+		en1.reset();
+		gyro.reset();
+		while (isOperatorControl() && isEnabled()) {
+			sd.tankDrive(-stick0.getY(), stick1.getY());
+			SmartDashboard.putNumber("gyro: ", gyro.getAngle());
+			SmartDashboard.putNumber("L Enc", en0.getDistance());
+			SmartDashboard.putNumber("R Enc", en1.getDistance());
+			Timer.delay(0.005); 
+>>>>>>> master
 		}
 	}
 
