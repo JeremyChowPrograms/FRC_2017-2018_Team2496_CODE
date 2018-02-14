@@ -1,6 +1,7 @@
 package org.usfirst.frc.team2496.robot;
 
 import com.shwinlib.ShwinDrive;
+import com.shwinlib.ShwinPID;
 
 import edu.wpi.cscore.UsbCamera;
 import edu.wpi.first.wpilibj.ADXRS450_Gyro;
@@ -78,7 +79,7 @@ public class Robot extends SampleRobot {
 			double diff = 1;
 			while (gyro.getAngle() > -90) {
 				diff = (-90.0 - gyro.getAngle()) / 90.0;
-				sd.tankDrive(-0.1 + 0.3 * diff, -0.1 + 0.3 * diff);
+				sd.tankDrive(-0.17 + 0.3 * diff, -0.17 + 0.3 * diff);
 			}
 			sd.tankDrive(0, 0);
 
@@ -100,7 +101,7 @@ public class Robot extends SampleRobot {
 			gyro.reset();
 			while (gyro.getAngle() < 90) {
 				diff = (90.0 - gyro.getAngle()) / 90.0;
-				sd.tankDrive(0.1 + 0.3 * diff, 0.1 + 0.3 * diff);
+				sd.tankDrive(0.17 + 0.3 * diff, 0.17 + 0.3 * diff);
 			}
 			sd.tankDrive(0, 0);
 			en0.reset();
@@ -134,7 +135,7 @@ public class Robot extends SampleRobot {
 			gyro.reset();
 			while (gyro.getAngle() < 90) {
 				diff = (90.0 - gyro.getAngle()) / 90.0;
-				sd.tankDrive(0.1 + 0.3 * diff, 0.1 + 0.3 * diff);
+				sd.tankDrive(0.17 + 0.3 * diff, 0.17 + 0.3 * diff);
 			}
 			sd.tankDrive(0, 0);
 			en0.reset();
@@ -155,7 +156,7 @@ public class Robot extends SampleRobot {
 			gyro.reset();
 			while (gyro.getAngle() > -90) {
 				diff = (-90.0 - gyro.getAngle()) / 90.0;
-				sd.tankDrive(-0.1 + 0.3 * diff, -0.1 + 0.3 * diff);
+				sd.tankDrive(-0.17 + 0.3 * diff, -0.17 + 0.3 * diff);
 			}
 			sd.tankDrive(0, 0);
 
@@ -174,7 +175,9 @@ public class Robot extends SampleRobot {
 
 	boolean cupControl = false;
 	double fixedHeight = 0.0d;
-	double heightThreshold = 2.0d;
+	double heightThreshold = 1.0d;
+	final double heightLimit = 50.0d;
+	int stage = 0;
 
 	@Override
 	public void operatorControl() { // Main thread
@@ -187,18 +190,22 @@ public class Robot extends SampleRobot {
 		Thread liftControl = new Thread() {
 			@Override
 			public void run() {
+				ShwinPID pid = new ShwinPID(0.45f, 0, 0.0f, 0);
 				while (isOperatorControl() && isEnabled()) {
-					if (!cupControl) {
+					lift.set((pid.doPID((float) (fixedHeight - en2.getDistance()))));
+					System.out.println(fixedHeight - en2.getDistance());
+				/*	if (!cupControl) {
 						if (en2.getDistance() < fixedHeight - heightThreshold) {
-							lift.set(-(0.4 + 0.1 * (fixedHeight - en2.getDistance())));
+
+							
 						} else {
 							if (en2.getDistance() > fixedHeight + heightThreshold) {
-								lift.set((0.2 + 0.1 * (fixedHeight - en2.getDistance())));
+								lift.set(-(pid.doPID((float) (fixedHeight - en2.getDistance()))));
 							} else {
 								lift.set(0.0);
 							}
 						}
-					}
+					}*/ 
 				}
 			}
 		};
@@ -206,13 +213,13 @@ public class Robot extends SampleRobot {
 		while (isOperatorControl() && isEnabled()) {
 			ts1 = (-stick0.getZ() / 2) + 0.5d;
 			ts2 = (-stick1.getZ() / 2) + 0.5d;
-			SmartDashboard.putNumber("gyro: ", gyro.getAngle());
-			SmartDashboard.putNumber("L Enc", en0.getDistance());
-			SmartDashboard.putNumber("R Enc", en1.getDistance());
+			SmartDashboard.putNumber("Gyro", gyro.getAngle());
+			SmartDashboard.putNumber("L Encoder", en0.getDistance());
+			SmartDashboard.putNumber("R Encoder", en1.getDistance());
 			SmartDashboard.putNumber("Lift", en2.getDistance());
+			SmartDashboard.putNumber("Fixed Height", fixedHeight);
 			SmartDashboard.putNumber("ts1", ts1);
 			SmartDashboard.putNumber("ts2", ts2);
-			SmartDashboard.putNumber("DH", fixedHeight);
 			sd.tankDrive(-stick0.getY() * ts1, stick1.getY() * ts2);
 			if (!cupControl) {
 				if (stick0.getRawButton(1)) {
@@ -226,12 +233,12 @@ public class Robot extends SampleRobot {
 					claw2.set(0);
 				}
 				if (stick1.getRawButton(1)) {
-					fixedHeight += 0.01;
-					if (fixedHeight > 40) {
-						fixedHeight = 40;
+					fixedHeight += 0.06;
+					if (fixedHeight > heightLimit) {
+						fixedHeight = heightLimit;
 					}
 				} else if (stick1.getRawButton(3)) {
-					fixedHeight -= 0.01;
+					fixedHeight -= 0.06;
 					if (fixedHeight < 0) {
 						fixedHeight = 0;
 					}

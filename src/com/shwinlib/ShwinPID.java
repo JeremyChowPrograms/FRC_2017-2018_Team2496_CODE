@@ -1,6 +1,6 @@
 package com.shwinlib;
 
-class PID {
+public class ShwinPID {
   long deltaT;
   long prevT;
   float kP;
@@ -10,7 +10,7 @@ class PID {
   float integData;
   float prevError = 0, prevTime = 0;
   
-  public PID(float kP, float kI, float kD, float integLimit) {
+  public ShwinPID(float kP, float kI, float kD, float integLimit) {
     this.kP = kP;
     this.kI = kI;
     this.kD = kD;
