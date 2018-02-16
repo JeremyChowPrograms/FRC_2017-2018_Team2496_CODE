@@ -23,7 +23,7 @@ public class Robot extends SampleRobot {
 	Joystick stick1 = new Joystick(1);
 	Encoder en0 = new Encoder(2, 3);
 	Encoder en1 = new Encoder(1, 0);
-	Encoder en2 = new Encoder(5, 4);
+	Encoder en2 = new Encoder(4, 5);
 	SpeedController claw = new Talon(5);
 	SpeedController claw2 = new Talon(6);
 	SpeedController lift = new Talon(7);
@@ -173,10 +173,7 @@ public class Robot extends SampleRobot {
 	}
 	/**/
 
-	boolean cupControl = false;
 	double fixedHeight = 0.0d;
-	double heightThreshold = 1.0d;
-	final double heightLimit = 50.0d;
 	int stage = 0;
 
 	@Override
@@ -192,20 +189,8 @@ public class Robot extends SampleRobot {
 			public void run() {
 				ShwinPID pid = new ShwinPID(0.45f, 0, 0.0f, 0);
 				while (isOperatorControl() && isEnabled()) {
-					lift.set((pid.doPID((float) (fixedHeight - en2.getDistance()))));
-					System.out.println(fixedHeight - en2.getDistance());
-				/*	if (!cupControl) {
-						if (en2.getDistance() < fixedHeight - heightThreshold) {
-
-							
-						} else {
-							if (en2.getDistance() > fixedHeight + heightThreshold) {
-								lift.set(-(pid.doPID((float) (fixedHeight - en2.getDistance()))));
-							} else {
-								lift.set(0.0);
-							}
-						}
-					}*/ 
+					double debug = pid.doPID((fixedHeight - en2.getDistance()));
+					lift.set(debug);
 				}
 			}
 		};
@@ -221,28 +206,24 @@ public class Robot extends SampleRobot {
 			SmartDashboard.putNumber("ts1", ts1);
 			SmartDashboard.putNumber("ts2", ts2);
 			sd.tankDrive(-stick0.getY() * ts1, stick1.getY() * ts2);
-			if (!cupControl) {
-				if (stick0.getRawButton(1)) {
-					claw.set(1);
-					claw2.set(1);
-				} else if (stick0.getRawButton(3)) {
-					claw.set(-1);
-					claw2.set(-1);
-				} else {
-					claw.set(0);
-					claw2.set(0);
-				}
-				if (stick1.getRawButton(1)) {
-					fixedHeight += 0.06;
-					if (fixedHeight > heightLimit) {
-						fixedHeight = heightLimit;
-					}
-				} else if (stick1.getRawButton(3)) {
-					fixedHeight -= 0.06;
-					if (fixedHeight < 0) {
-						fixedHeight = 0;
-					}
-				}
+			if (stick0.getRawButton(1)) {
+				claw.set(1);
+				claw2.set(1);
+			} else if (stick0.getRawButton(3)) {
+				claw.set(-1);
+				claw2.set(-1);
+			} else {
+				claw.set(0);
+				claw2.set(0);
+			}
+			if (stick1.getRawButton(3)) {
+				fixedHeight = 0.0d;
+			}
+			if (stick1.getRawButton(4)) {
+				fixedHeight = 18.0d;
+			}
+			if (stick1.getRawButton(5)) {
+				fixedHeight = 33.0d;
 			}
 			if (stick0.getRawButton(8)) {
 				climb.set(1);
@@ -250,30 +231,6 @@ public class Robot extends SampleRobot {
 				climb.set(-1);
 			} else {
 				climb.set(0);
-			}
-			if (stick1.getRawButton(2)) {
-				new Thread() {
-					@Override
-					public void run() {
-						cupControl = true;
-						try {
-							lift.set(0.75);
-							Timer.delay(2);// 59 in
-							lift.set(0);
-							claw.set(-1);
-							claw2.set(-1);
-							Timer.delay(2);
-							claw.set(0);
-							claw2.set(0);
-							lift.set(-0.3);
-							Timer.delay(2);
-							lift.set(0);
-						} catch (Exception e) {
-							e.printStackTrace();
-						}
-						cupControl = false;
-					}
-				}.start();
 			}
 			Timer.delay(0.005);
 		}
