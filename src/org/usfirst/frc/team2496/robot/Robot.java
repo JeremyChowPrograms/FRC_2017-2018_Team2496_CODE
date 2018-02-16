@@ -190,7 +190,7 @@ public class Robot extends SampleRobot {
 		Thread liftControl = new Thread() {
 			@Override
 			public void run() {
-				ShwinPID pid = new ShwinPID(0.45f, 0, 0.0f, 0);
+				ShwinPID pid = new ShwinPID(0.45f, 0, 0.2f, 0);
 				while (isOperatorControl() && isEnabled()) {
 					lift.set((pid.doPID((float) (fixedHeight - en2.getDistance()))));
 					System.out.println(fixedHeight - en2.getDistance());
