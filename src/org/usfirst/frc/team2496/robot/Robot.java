@@ -72,6 +72,7 @@ public class Robot extends SampleRobot {
 			if (!startingOnLeft) {
 				double kin = 0;
 				double kinscale = 0.01;
+				fixedHeight = 17.0d;
 				while (en0.getDistance() < 90.85 || en1.getDistance() < 90.85) {
 					sd.tankDrive(0.4 + kin * kinscale, -0.4 + kin * kinscale);
 					kin = (en1.getDistance() - en0.getDistance());
@@ -79,10 +80,7 @@ public class Robot extends SampleRobot {
 				sd.tankDrive(-1, 1);
 				Timer.delay(0.1);
 				sd.tankDrive(0, 0);
-
-				fixedHeight = 17.0d;
-				while (en2.getDistance() < fixedHeight - 1) {
-				}
+				Timer.delay(2);
 				claw.set(-1);
 				claw2.set(-1);
 				Timer.delay(1);
@@ -103,7 +101,7 @@ public class Robot extends SampleRobot {
 				speed = 0.15f;
 				
 				
-				ShwinPID pid = new ShwinPID(0.008f, 0, 200000f, 0);
+				ShwinPID pid = new ShwinPID(0.01f, 0, 200000f, 0);
 				gyro.reset();
 				double doPid = 0;
 				while (90 - gyro.getAngle() > 0) {
@@ -147,10 +145,15 @@ public class Robot extends SampleRobot {
 			gyro.reset();
 
 			double diff = 1;
-			while (gyro.getAngle() > -90) {
-				diff = (-90.0 - gyro.getAngle()) / 90.0;
-				sd.tankDrive(-0.17 + 0.3 * diff, -0.17 + 0.3 * diff);
+			ShwinPID pid = new ShwinPID(0.008f, 0, 200000f, 0);
+			gyro.reset();
+			double doPid = 0;
+			while (90 + gyro.getAngle() > 0) {
+				doPid = pid.doPID(90 + gyro.getAngle());
+				sd.tankDrive(-0.01 - doPid, -0.01 - doPid);
 			}
+			sd.tankDrive(1, 1);
+			Timer.delay(0.1);
 			sd.tankDrive(0, 0);
 
 			en0.reset();
@@ -190,8 +193,6 @@ public class Robot extends SampleRobot {
 			
 			System.out.println("Working...");
 			Timer.delay(0.5);
-			while (en2.getDistance() < fixedHeight - 1) {
-			}
 			claw.set(-1);
 			claw2.set(-1);
 			Timer.delay(1);
@@ -235,12 +236,16 @@ public class Robot extends SampleRobot {
 
 			// turn
 			gyro.reset();
-			while (gyro.getAngle() > -90) {
-				diff = (-90.0 - gyro.getAngle()) / 90.0;
-				sd.tankDrive(-0.17 + 0.3 * diff, -0.17 + 0.3 * diff);
+			ShwinPID pid = new ShwinPID(0.01f, 0, 200000f, 0);
+			gyro.reset();
+			double doPid = 0;
+			while (90 + gyro.getAngle() > 0) {
+				doPid = pid.doPID(90 + gyro.getAngle());
+				sd.tankDrive(-0.01 - doPid, -0.01 - doPid);
 			}
+			sd.tankDrive(1, 1);
+			Timer.delay(0.1);
 			sd.tankDrive(0, 0);
-
 			speed = 0.15f;
 			fixedHeight = 18.0d;
 			en0.reset();
@@ -273,7 +278,7 @@ public class Robot extends SampleRobot {
 		en0.reset();
 		en1.reset();
 		en2.reset();
-		fixedHeight = 0.0d;
+		//fixedHeight = 0.0d; //Questionable
 		double ts1, ts2;
 		gyro.reset();
 		Thread liftControl = new Thread() {
