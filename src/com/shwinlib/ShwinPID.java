@@ -17,16 +17,21 @@ public class ShwinPID {
     this.integLimit = integLimit;
   }
   
+  public void updateSpeed(double kP, double kI, double kD, double integLimit){
+	    this.kP = kP;
+	    this.kI = kI;
+	    this.kD = kD;
+	    this.integLimit = integLimit;
+  }
+  
  
 
 
   public double doPID(double error) {
     deltaT = (System.nanoTime() - prevT);
-    System.out.print(deltaT +" ");
     prevT = System.nanoTime();
     
     double P = error * kP;
-    System.out.print(P+" ");
     double I = 0.0f; //you dont need this right now
     double D = (error-prevError)/deltaT * kD;
     prevError = error;
