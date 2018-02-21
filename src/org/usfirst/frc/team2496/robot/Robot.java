@@ -31,7 +31,6 @@ public class Robot extends SampleRobot {
 	SpeedController lift = new Talon(7);
 	SpeedController climb = new Talon(8);
 	boolean startingOnLeft = true; // true or false
-	boolean scale = true;
 
 	public Robot() {
 
@@ -45,10 +44,12 @@ public class Robot extends SampleRobot {
 		en0.setDistancePerPulse(8 * Math.PI / 200);
 		en1.setDistancePerPulse(8 * Math.PI / 200);
 		en2.setDistancePerPulse(Math.PI / 200);
+		SmartDashboard.putBoolean("StartingOnLeft", startingOnLeft);
 	}
 
 	@Override
 	public void autonomous() {
+		startingOnLeft = SmartDashboard.getBoolean("StartingOnLeft", startingOnLeft);
 		en0.reset();
 		en1.reset();
 		en2.reset();
@@ -69,7 +70,115 @@ public class Robot extends SampleRobot {
 		};
 		liftControl.start();
 		String gameCode = DriverStation.getInstance().getGameSpecificMessage();
-		if (!scale) {
+		if((gameCode.charAt(1)=='L')==startingOnLeft){
+			if (!startingOnLeft) {
+				double kin = 0;
+				double kinscale = 0.01;
+
+				en0.reset();
+				en1.reset();
+				while (en0.getDistance() < 300 || en1.getDistance() <300) {
+					sd.tankDrive(0.4 + kin * kinscale, -0.4 + kin * kinscale);
+					kin = (en1.getDistance() - en0.getDistance());
+				}
+				sd.tankDrive(-1, 1);
+				Timer.delay(0.1);
+				sd.tankDrive(0, 0);
+				//turning LEFT
+				ShwinPID pid = new ShwinPID(0.008f, 0, 200000f, 0);
+				gyro.reset();
+				double doPid = 0;
+				while (90 + gyro.getAngle() > 0) {
+					doPid = pid.doPID(90 + gyro.getAngle());
+					sd.tankDrive(-0.01 - doPid, -0.01 - doPid);
+				}
+				sd.tankDrive(1, 1);
+				Timer.delay(0.1);
+				sd.tankDrive(0, 0); // end
+				
+
+				fixedHeight = 32.0;
+				Timer.delay(2);
+				en0.reset();
+				en1.reset();
+				while (en0.getDistance() < 24 || en1.getDistance() < 24) {
+					sd.tankDrive(0.4 + kin * kinscale, -0.4 + kin * kinscale);
+					kin = (en1.getDistance() - en0.getDistance());
+				}
+				sd.tankDrive(-1, 1);
+				Timer.delay(0.1);
+				sd.tankDrive(0, 0);
+
+				claw.set(-1);
+				claw2.set(-1);
+				Timer.delay(1);
+				claw.set(0);
+				claw2.set(0);
+				en0.reset();
+				en1.reset();
+				while (en0.getDistance() >-24 || en1.getDistance() >-24) {
+					sd.tankDrive(-0.4 - kin * kinscale, 0.4 - kin * kinscale);
+					kin = (en1.getDistance() - en0.getDistance());
+				}
+				sd.tankDrive(1, -1);
+				Timer.delay(0.1);
+				sd.tankDrive(0, 0);
+			}else{
+				double kin = 0;
+				double kinscale = 0.01;
+				en0.reset();
+				en1.reset();
+				while (en0.getDistance() < 300 || en1.getDistance() < 300) {
+					sd.tankDrive(0.4 + kin * kinscale, -0.4 + kin * kinscale);
+					kin = (en1.getDistance() - en0.getDistance());
+				}
+				sd.tankDrive(-1, 1);
+				Timer.delay(0.1);
+				sd.tankDrive(0, 0);
+
+				// turning RIGHT 90 degrees
+				ShwinPID pid = new ShwinPID(0.01f, 0, 200000f, 0);
+				gyro.reset();
+				double doPid = 0;
+				while (90 - gyro.getAngle() > 0) {
+					doPid = pid.doPID(90 - gyro.getAngle());
+					sd.tankDrive(doPid, doPid);
+				}
+				sd.tankDrive(-0.5, -0.5);
+				Timer.delay(0.1);
+				sd.tankDrive(0, 0); // end
+
+				fixedHeight = 32.0;
+				Timer.delay(2);
+				en0.reset();
+				en1.reset();
+				while (en0.getDistance() < 24 || en1.getDistance() < 24) {
+					sd.tankDrive(0.4 + kin * kinscale, -0.4 + kin * kinscale);
+					kin = (en1.getDistance() - en0.getDistance());
+				}
+				sd.tankDrive(-1, 1);
+				Timer.delay(0.1);
+				sd.tankDrive(0, 0);
+
+				claw.set(-1);
+				claw2.set(-1);
+				Timer.delay(1);
+				claw.set(0);
+				claw2.set(0);
+				
+				
+				en0.reset();
+				en1.reset();
+				while (en0.getDistance() >-24 || en1.getDistance() >-24) {
+					sd.tankDrive(-0.4 - kin * kinscale, 0.4 - kin * kinscale);
+					kin = (en1.getDistance() - en0.getDistance());
+				}
+				sd.tankDrive(1, -1);
+				Timer.delay(0.1);
+				sd.tankDrive(0, 0);
+			}
+		}
+		else{
 			if (gameCode.startsWith("L") == startingOnLeft) {
 				if (!startingOnLeft) {
 					double kin = 0;
@@ -266,118 +375,6 @@ public class Robot extends SampleRobot {
 				claw.set(0);
 				claw2.set(0);
 			}
-		} else {
-			// if scale true
-
-			if (gameCode.startsWith("L") == startingOnLeft) {
-				if (!startingOnLeft) {
-					double kin = 0;
-					double kinscale = 0.01;
-
-					en0.reset();
-					en1.reset();
-					while (en0.getDistance() < 300 || en1.getDistance() <300) {
-						sd.tankDrive(0.4 + kin * kinscale, -0.4 + kin * kinscale);
-						kin = (en1.getDistance() - en0.getDistance());
-					}
-					sd.tankDrive(-1, 1);
-					Timer.delay(0.1);
-					sd.tankDrive(0, 0);
-					//turning LEFT
-					ShwinPID pid = new ShwinPID(0.008f, 0, 200000f, 0);
-					gyro.reset();
-					double doPid = 0;
-					while (90 + gyro.getAngle() > 0) {
-						doPid = pid.doPID(90 + gyro.getAngle());
-						sd.tankDrive(-0.01 - doPid, -0.01 - doPid);
-					}
-					sd.tankDrive(1, 1);
-					Timer.delay(0.1);
-					sd.tankDrive(0, 0); // end
-					
-
-					fixedHeight = 32.0;
-					Timer.delay(2);
-					en0.reset();
-					en1.reset();
-					while (en0.getDistance() < 24 || en1.getDistance() < 24) {
-						sd.tankDrive(0.4 + kin * kinscale, -0.4 + kin * kinscale);
-						kin = (en1.getDistance() - en0.getDistance());
-					}
-					sd.tankDrive(-1, 1);
-					Timer.delay(0.1);
-					sd.tankDrive(0, 0);
-
-					claw.set(-1);
-					claw2.set(-1);
-					Timer.delay(1);
-					claw.set(0);
-					claw2.set(0);
-					en0.reset();
-					en1.reset();
-					while (en0.getDistance() >-24 || en1.getDistance() >-24) {
-						sd.tankDrive(-0.4 - kin * kinscale, 0.4 - kin * kinscale);
-						kin = (en1.getDistance() - en0.getDistance());
-					}
-					sd.tankDrive(1, -1);
-					Timer.delay(0.1);
-					sd.tankDrive(0, 0);
-				}else{
-					double kin = 0;
-					double kinscale = 0.01;
-					en0.reset();
-					en1.reset();
-					while (en0.getDistance() < 300 || en1.getDistance() < 300) {
-						sd.tankDrive(0.4 + kin * kinscale, -0.4 + kin * kinscale);
-						kin = (en1.getDistance() - en0.getDistance());
-					}
-					sd.tankDrive(-1, 1);
-					Timer.delay(0.1);
-					sd.tankDrive(0, 0);
-
-					// turning RIGHT 90 degrees
-					ShwinPID pid = new ShwinPID(0.01f, 0, 200000f, 0);
-					gyro.reset();
-					double doPid = 0;
-					while (90 - gyro.getAngle() > 0) {
-						doPid = pid.doPID(90 - gyro.getAngle());
-						sd.tankDrive(doPid, doPid);
-					}
-					sd.tankDrive(-0.5, -0.5);
-					Timer.delay(0.1);
-					sd.tankDrive(0, 0); // end
-
-					fixedHeight = 32.0;
-					Timer.delay(2);
-					en0.reset();
-					en1.reset();
-					while (en0.getDistance() < 24 || en1.getDistance() < 24) {
-						sd.tankDrive(0.4 + kin * kinscale, -0.4 + kin * kinscale);
-						kin = (en1.getDistance() - en0.getDistance());
-					}
-					sd.tankDrive(-1, 1);
-					Timer.delay(0.1);
-					sd.tankDrive(0, 0);
-
-					claw.set(-1);
-					claw2.set(-1);
-					Timer.delay(1);
-					claw.set(0);
-					claw2.set(0);
-					
-					
-					en0.reset();
-					en1.reset();
-					while (en0.getDistance() >-24 || en1.getDistance() >-24) {
-						sd.tankDrive(-0.4 - kin * kinscale, 0.4 - kin * kinscale);
-						kin = (en1.getDistance() - en0.getDistance());
-					}
-					sd.tankDrive(1, -1);
-					Timer.delay(0.1);
-					sd.tankDrive(0, 0);
-				}
-			}
-
 		}
 	}
 	/**/
