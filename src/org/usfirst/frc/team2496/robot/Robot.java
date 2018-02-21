@@ -97,7 +97,7 @@ public class Robot extends SampleRobot {
 				sd.tankDrive(0, 0); // end
 				
 
-				fixedHeight = 32.0;
+				fixedHeight = 30.0;
 				Timer.delay(2);
 				en0.reset();
 				en1.reset();
@@ -148,7 +148,7 @@ public class Robot extends SampleRobot {
 				Timer.delay(0.1);
 				sd.tankDrive(0, 0); // end
 
-				fixedHeight = 32.0;
+				fixedHeight = 30.0;
 				Timer.delay(2);
 				en0.reset();
 				en1.reset();
@@ -441,8 +441,8 @@ public class Robot extends SampleRobot {
 				fixedHeight = 15.0d;
 			}
 			if (stick1.getRawButton(5)) {
-				speed = 0.15f;
-				fixedHeight = 32.0d;
+				speed = 0.13f;
+				fixedHeight = 30.0d;
 			}
 			if (stick0.getRawButton(8)) {
 				climb.set(-ts1);
@@ -478,11 +478,11 @@ public class Robot extends SampleRobot {
 				sd.tankDrive(0, 0); // end
 			}
 			if (stick1.getRawButton(8)) {
-				doy.pulse(500);
+				doy.pulse(0.0005);
 			} else if (stick1.getRawButton(9)) {
-				doy.pulse(2500);
+				doy.pulse(0.0025);
 			} else {
-				doy.pulse(1500);
+				doy.pulse(0.0015);
 			}
 			if (stick0.getRawButton(6)) {
 				gyro.calibrate();
