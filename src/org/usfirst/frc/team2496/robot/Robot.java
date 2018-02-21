@@ -14,6 +14,8 @@ import edu.wpi.first.wpilibj.Servo;
 import edu.wpi.first.wpilibj.SpeedController;
 import edu.wpi.first.wpilibj.Talon;
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.hal.DIOJNI;
+import edu.wpi.first.wpilibj.hal.PWMJNI;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 @SuppressWarnings("deprecation")
@@ -276,7 +278,7 @@ public class Robot extends SampleRobot {
 
 					en0.reset();
 					en1.reset();
-					while (en0.getDistance() < 291 || en1.getDistance() < 291) {
+					while (en0.getDistance() < 300 || en1.getDistance() <300) {
 						sd.tankDrive(0.4 + kin * kinscale, -0.4 + kin * kinscale);
 						kin = (en1.getDistance() - en0.getDistance());
 					}
@@ -313,12 +315,21 @@ public class Robot extends SampleRobot {
 					Timer.delay(1);
 					claw.set(0);
 					claw2.set(0);
+					en0.reset();
+					en1.reset();
+					while (en0.getDistance() >-24 || en1.getDistance() >-24) {
+						sd.tankDrive(-0.4 - kin * kinscale, 0.4 - kin * kinscale);
+						kin = (en1.getDistance() - en0.getDistance());
+					}
+					sd.tankDrive(1, -1);
+					Timer.delay(0.1);
+					sd.tankDrive(0, 0);
 				}else{
 					double kin = 0;
 					double kinscale = 0.01;
 					en0.reset();
 					en1.reset();
-					while (en0.getDistance() < 291 || en1.getDistance() < 291) {
+					while (en0.getDistance() < 300 || en1.getDistance() < 300) {
 						sd.tankDrive(0.4 + kin * kinscale, -0.4 + kin * kinscale);
 						kin = (en1.getDistance() - en0.getDistance());
 					}
@@ -355,53 +366,17 @@ public class Robot extends SampleRobot {
 					Timer.delay(1);
 					claw.set(0);
 					claw2.set(0);
-				}
-			}else{
-				if (startingOnLeft) {
-					double kin = 0;
-					double kinscale = 0.01;
-					while (en0.getDistance() < 75 || en1.getDistance() < 75) {
-						sd.tankDrive(0.4 + kin * kinscale, -0.4 + kin * kinscale);
-						kin = (en1.getDistance() - en0.getDistance());
-					}
-					sd.tankDrive(-1, 1);
-					Timer.delay(0.1);
-					sd.tankDrive(0, 0);
 					
-					// turning RIGHT 90 degrees
-					ShwinPID pid = new ShwinPID(0.01f, 0, 200000f, 0);
-					gyro.reset();
-					double doPid = 0;
-					while (90 - gyro.getAngle() > 0) {
-						doPid = pid.doPID(90 - gyro.getAngle());
-						sd.tankDrive(doPid, doPid);
-					}
-					sd.tankDrive(-0.5, -0.5);
-					Timer.delay(0.1);
-					sd.tankDrive(0, 0); // end
 					
 					en0.reset();
 					en1.reset();
-					while (en0.getDistance() < 96 || en1.getDistance() < 96) {
-						sd.tankDrive(0.4 + kin * kinscale, -0.4 + kin * kinscale);
+					while (en0.getDistance() >-24 || en1.getDistance() >-24) {
+						sd.tankDrive(-0.4 - kin * kinscale, 0.4 - kin * kinscale);
 						kin = (en1.getDistance() - en0.getDistance());
 					}
-					sd.tankDrive(-1, 1);
+					sd.tankDrive(1, -1);
 					Timer.delay(0.1);
 					sd.tankDrive(0, 0);
-					
-					//turning LEFT
-					pid.updateSpeed(0.008f, 0, 200000f, 0);
-					gyro.reset();
-					while (90 + gyro.getAngle() > 0) {
-						doPid = pid.doPID(90 + gyro.getAngle());
-						sd.tankDrive(-0.01 - doPid, -0.01 - doPid);
-					}
-					sd.tankDrive(1, 1);
-					Timer.delay(0.1);
-					sd.tankDrive(0, 0); // end
-				}else{
-					
 				}
 			}
 
