@@ -6,22 +6,20 @@ import com.shwinlib.ShwinPID;
 import edu.wpi.cscore.UsbCamera;
 import edu.wpi.first.wpilibj.ADXRS450_Gyro;
 import edu.wpi.first.wpilibj.CameraServer;
+import edu.wpi.first.wpilibj.DigitalOutput;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.SampleRobot;
-import edu.wpi.first.wpilibj.Servo;
 import edu.wpi.first.wpilibj.SpeedController;
 import edu.wpi.first.wpilibj.Talon;
 import edu.wpi.first.wpilibj.Timer;
-import edu.wpi.first.wpilibj.hal.DIOJNI;
-import edu.wpi.first.wpilibj.hal.PWMJNI;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 @SuppressWarnings("deprecation")
 public class Robot extends SampleRobot {
 	ADXRS450_Gyro gyro = new ADXRS450_Gyro();
-	Servo servo = new Servo(0);
+//	Servo servo = new Servo(0);
 	ShwinDrive sd = new ShwinDrive(3, 1, 4, 2);
 	Joystick stick0 = new Joystick(0);
 	Joystick stick1 = new Joystick(1);
@@ -100,7 +98,7 @@ public class Robot extends SampleRobot {
 					sd.tankDrive(-1, 1);
 					Timer.delay(0.1);
 					sd.tankDrive(0, 0);
-					double diff = 1;
+				//	double diff = 1;
 					fixedHeight = 17.0d;
 					speed = 0.15f;
 
@@ -387,6 +385,7 @@ public class Robot extends SampleRobot {
 	double fixedHeight = 0.0d;
 	int stage = 0;
 
+	DigitalOutput doy = new DigitalOutput(6);
 	float speed = 0.2f;
 
 	@Override
@@ -421,7 +420,6 @@ public class Robot extends SampleRobot {
 			SmartDashboard.putNumber("Fixed Height", fixedHeight);
 			SmartDashboard.putNumber("ts1", ts1);
 			SmartDashboard.putNumber("ts2", ts2);
-			SmartDashboard.putNumber("Servo", servo.getAngle());
 			sd.tankDrive(-stick0.getY() * ts1, stick1.getY() * ts2);
 			if (stick0.getRawButton(1)) {
 				claw.set(1);
@@ -483,10 +481,11 @@ public class Robot extends SampleRobot {
 				sd.tankDrive(0, 0); // end
 			}
 			if (stick1.getRawButton(8)) {
-				servo.setAngle(40 * 720);
+				doy.pulse(500);
 			} else if (stick1.getRawButton(9)) {
-				servo.setAngle(0);
+				doy.pulse(2500);
 			} else {
+				doy.pulse(1500);
 			}
 			if (stick0.getRawButton(6)) {
 				gyro.calibrate();
