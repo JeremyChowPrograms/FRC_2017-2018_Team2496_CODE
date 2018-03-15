@@ -59,7 +59,7 @@ public class Robot extends SampleRobot {
 		Thread servoDown = new Thread(){
 			@Override
 			public void run(){
-				servo.set(1);
+				servo.set(-1);
 				Timer.delay(8);
 				servo.set(0);
 			}
@@ -493,6 +493,14 @@ public class Robot extends SampleRobot {
 			if (stick0.getRawButton(6)) {
 				gyro.calibrate();
 				gyro.reset();
+			}
+			if(stick1.getRawButton(11)){
+				en2.reset();
+				fixedHeight = 1.0d;
+			}
+			if(stick1.getRawButton(10)){
+				en2.reset();
+				fixedHeight = -1.0d;
 			}
 			Timer.delay(0.005);
 		}
