@@ -191,7 +191,7 @@ public class Robot extends SampleRobot {
 					double kin = 0;
 					double kinscale = 0.01;
 					fixedHeight = 17.0d;
-					while (en0.getDistance() < 90.85 || en1.getDistance() < 90.85) {
+					while (en0.getDistance() < 80.85 || en1.getDistance() < 80.85) {
 						sd.tankDrive(0.4 + kin * kinscale, -0.4 + kin * kinscale);
 						kin = (en1.getDistance() - en0.getDistance());
 					}
@@ -383,7 +383,6 @@ public class Robot extends SampleRobot {
 				claw2.set(0);
 			}
 		}
-		fixedHeight = 0.0d;
 	}
 	/**/
 
@@ -504,6 +503,10 @@ public class Robot extends SampleRobot {
 			}
 			Timer.delay(0.005);
 		}
+	}
+	 @Override
+	protected void disabled() {
+		 servo.set(0);
 	}
 
 	/**
