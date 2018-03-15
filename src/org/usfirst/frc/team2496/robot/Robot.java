@@ -6,7 +6,6 @@ import com.shwinlib.ShwinPID;
 import edu.wpi.cscore.UsbCamera;
 import edu.wpi.first.wpilibj.ADXRS450_Gyro;
 import edu.wpi.first.wpilibj.CameraServer;
-import edu.wpi.first.wpilibj.DigitalOutput;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.Joystick;
@@ -19,7 +18,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 @SuppressWarnings("deprecation")
 public class Robot extends SampleRobot {
 	ADXRS450_Gyro gyro = new ADXRS450_Gyro();
-//	Servo servo = new Servo(0);
+	// Servo servo = new Servo(0);
 	ShwinDrive sd = new ShwinDrive(3, 1, 4, 2);
 	Joystick stick0 = new Joystick(0);
 	Joystick stick1 = new Joystick(1);
@@ -30,7 +29,8 @@ public class Robot extends SampleRobot {
 	SpeedController claw2 = new Talon(6);
 	SpeedController lift = new Talon(7);
 	SpeedController climb = new Talon(8);
-	boolean startingOnLeft = true; // true or false
+	SpeedController servo = new Talon(0);
+	boolean startingOnLeft = false; // true or false
 
 	public Robot() {
 
@@ -55,6 +55,16 @@ public class Robot extends SampleRobot {
 		en2.reset();
 		fixedHeight = 0.0d;
 		gyro.reset();
+		
+		Thread servoDown = new Thread(){
+			@Override
+			public void run(){
+				servo.set(1);
+				Timer.delay(8);
+				servo.set(0);
+			}
+		};
+		servoDown.start();
 		Thread liftControl = new Thread() {
 			@Override
 			public void run() {
@@ -70,21 +80,21 @@ public class Robot extends SampleRobot {
 		};
 		liftControl.start();
 		String gameCode = DriverStation.getInstance().getGameSpecificMessage();
-		if((gameCode.charAt(1)=='L')==startingOnLeft){
+		if ((gameCode.charAt(1) == 'L') == startingOnLeft) {
 			if (!startingOnLeft) {
 				double kin = 0;
 				double kinscale = 0.01;
 
 				en0.reset();
 				en1.reset();
-				while (en0.getDistance() < 300 || en1.getDistance() <300) {
+				while (en0.getDistance() < 300 || en1.getDistance() < 300) {
 					sd.tankDrive(0.4 + kin * kinscale, -0.4 + kin * kinscale);
 					kin = (en1.getDistance() - en0.getDistance());
 				}
 				sd.tankDrive(-1, 1);
 				Timer.delay(0.1);
 				sd.tankDrive(0, 0);
-				//turning LEFT
+				// turning LEFT
 				ShwinPID pid = new ShwinPID(0.008f, 0, 200000f, 0);
 				gyro.reset();
 				double doPid = 0;
@@ -95,7 +105,6 @@ public class Robot extends SampleRobot {
 				sd.tankDrive(1, 1);
 				Timer.delay(0.1);
 				sd.tankDrive(0, 0); // end
-				
 
 				fixedHeight = 30.0;
 				Timer.delay(2);
@@ -116,14 +125,14 @@ public class Robot extends SampleRobot {
 				claw2.set(0);
 				en0.reset();
 				en1.reset();
-				while (en0.getDistance() >-24 || en1.getDistance() >-24) {
+				while (en0.getDistance() > -24 || en1.getDistance() > -24) {
 					sd.tankDrive(-0.4 - kin * kinscale, 0.4 - kin * kinscale);
 					kin = (en1.getDistance() - en0.getDistance());
 				}
 				sd.tankDrive(1, -1);
 				Timer.delay(0.1);
 				sd.tankDrive(0, 0);
-			}else{
+			} else {
 				double kin = 0;
 				double kinscale = 0.01;
 				en0.reset();
@@ -165,11 +174,10 @@ public class Robot extends SampleRobot {
 				Timer.delay(1);
 				claw.set(0);
 				claw2.set(0);
-				
-				
+
 				en0.reset();
 				en1.reset();
-				while (en0.getDistance() >-24 || en1.getDistance() >-24) {
+				while (en0.getDistance() > -24 || en1.getDistance() > -24) {
 					sd.tankDrive(-0.4 - kin * kinscale, 0.4 - kin * kinscale);
 					kin = (en1.getDistance() - en0.getDistance());
 				}
@@ -177,8 +185,7 @@ public class Robot extends SampleRobot {
 				Timer.delay(0.1);
 				sd.tankDrive(0, 0);
 			}
-		}
-		else{
+		} else {
 			if (gameCode.startsWith("L") == startingOnLeft) {
 				if (!startingOnLeft) {
 					double kin = 0;
@@ -207,7 +214,7 @@ public class Robot extends SampleRobot {
 					sd.tankDrive(-1, 1);
 					Timer.delay(0.1);
 					sd.tankDrive(0, 0);
-				//	double diff = 1;
+					// double diff = 1;
 					fixedHeight = 17.0d;
 					speed = 0.15f;
 
@@ -376,13 +383,12 @@ public class Robot extends SampleRobot {
 				claw2.set(0);
 			}
 		}
+		fixedHeight = 0.0d;
 	}
 	/**/
 
 	double fixedHeight = 0.0d;
 	int stage = 0;
-
-	DigitalOutput doy = new DigitalOutput(6);
 	float speed = 0.2f;
 
 	@Override
@@ -478,11 +484,11 @@ public class Robot extends SampleRobot {
 				sd.tankDrive(0, 0); // end
 			}
 			if (stick1.getRawButton(8)) {
-				doy.pulse(0.0005);
+				servo.set(1);
 			} else if (stick1.getRawButton(9)) {
-				doy.pulse(0.0025);
+				servo.set(-1);
 			} else {
-				doy.pulse(0.0015);
+				servo.set(0);
 			}
 			if (stick0.getRawButton(6)) {
 				gyro.calibrate();
